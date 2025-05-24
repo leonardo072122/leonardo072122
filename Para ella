@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matrix Romántico</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background-color: black;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<audio id="loveMusic" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio.
+</audio>
+
+<script>
+// Configuración inicial
+const canvas = document.getElementById('matrixCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const fontSize = 20;
+const columns = canvas.width / fontSize;
+const drops = [];
+for(let x = 0; x < columns; x++) {
+    drops[x] = 1;
+}
+
+// Mensajes románticos y colores
+const loveMessages = ["❤️", "Te Amo", "Amor", "Besos", "Cariño", "Sueños", "TQM", "Felicidad", "Siempre"];
+const colors = ["#FF69B4", "#FF1493", "#FFD700", "#00FFFF", "#FF4500", "#00FF7F", "#EE82EE"];
+
+// Velocidad dinámica
+let speed = 33; 
+
+function draw() {
+    // Fondo semitransparente para efecto de estela
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = fontSize + "px Arial";
+
+    for(let i = 0; i < drops.length; i++) {
+        // Color aleatorio para cada letra
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        ctx.fillStyle = color;
+
+        // Mensaje aleatorio
+        const text = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        // Probabilidad de reiniciar la caída
+        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i]++;
+    }
+}
+
+// Cambiar velocidad dinámica cada 5 segundos
+setInterval(() => {
+    speed = Math.floor(Math.random() * (100 - 20) + 20);
+}, 5000);
+
+// Bucle de animación con velocidad dinámica
+function animate() {
+    draw();
+    setTimeout(animate, speed);
+}
+
+animate();
+
+// Música de fondo
+const music = document.getElementById('loveMusic');
+music.volume = 0.5; // Ajustar volumen
+
+// Ajuste al redimensionar ventana
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
+
